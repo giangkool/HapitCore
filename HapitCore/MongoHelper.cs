@@ -33,7 +33,7 @@ namespace HapitCore
             IDPW sv = new IDPW();
             sv.ID = ID;
             sv.PW = PW;
-            collection.Save(sv).ToBsonDocument();
+            collection.Save(sv).ToBsonDocument("");
         }
         public void updata(string ID,string IDupdate,string PW,string PWupdate)
         {
