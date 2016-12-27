@@ -9,55 +9,63 @@ using MongoDB.Driver.Builders;
 
 namespace HapitCore
 {
-    public class MongoHelper
+    public class MongoDB
     {
         private MongoDatabase database;
-        public MongoHelper()
+        public MongoDB()
         {
-            MongoClient client = new MongoClient("mongodb://localhost:27017");
-
-            MongoServer _server = client.GetServer();
+            MongoClient _client = new MongoClient("mongodb://localhost:27017");
+            MongoServer _server = _client.GetServer();
             this.database = _server.GetDatabase("user");
-
-            MongoCollection collection = database.GetCollection<IDPW>("IDPW");
+            MongoCollection _colection = database.GetCollection<ObjectDB>("Infor");
         }
         public MongoCollection collection
         {
             get
             {
-                return database.GetCollection<IDPW>("IDPW");
+                return database.GetCollection<ObjectDB>("Infor");
             }
         }
-        public void swdata(string ID,string PW)
+        public bool checknull(string id)//kiểm tra id đó đã có người sử dụng chưa
         {
-            IDPW sv = new IDPW();
-            sv.ID = ID;
-            sv.PW = PW;
-            collection.Save(sv).ToBsonDocument();
-        }
-        public void updata(string ID,string IDupdate,string PW,string PWupdate)
-        {
-            IMongoQuery query = Query.EQ("ID",ID);
-            if (query != null)
-            {
-                IMongoQuery query1 = Query.EQ("PW", PW);
-                IMongoUpdate update = Update<IDPW>
-                                                 .Set(x => x.ID, IDupdate)
-                                                 .Set(x => x.PW, PWupdate);
-                collection.Update(query1, update);
-            }
-            
-            
-        }
-        public void rmdata(string ID,string PW)
-        {
-            IMongoQuery query = Query.EQ("ID", ID);
-            if (query!=null) {
-                IMongoQuery query1 = Query.EQ("PW", PW);
-                collection.Remove(query1);
-            }
-                
+            IMongoQuery query = Query.EQ("ID", id);
+            return (query == null) ? true : false;
         }
 
+        public void Insert(string ID, string PW, string Name, int Number)
+        {
+            ObjectDB sv = new ObjectDB();
+            sv.ID = ID;
+            sv.Password = PW;
+            sv.Number = Number;
+            sv.Name = Name;
+            if (checknull(ID) == true)//trường hợp rỗng thì thêm vào colection
+            {
+                collection.Save(sv).ToBsonDocument();
+
+            }
+
+        }
+        public void update(string kid, string ID, string PW, string Name, int Number)
+        {
+            if (checknull(kid) == false)
+            {
+                IMongoQuery query = Query.EQ("ID", kid);
+                IMongoUpdate update = Update<ObjectDB>
+                                                 .Set(x => x.ID, ID)
+                                                 .Set(x => x.Password, PW)
+                                                 .Set(x => x.Name, Name)
+                                                 .Set(x => x.Number, Number);
+                collection.Update(query, update);
+            }
+        }
+        public void delete(string ID)
+        {
+            if (checknull(ID) == false)
+            {
+                IMongoQuery query = Query.EQ("ID", ID);
+                collection.Remove(query);
+            }
+        }
     }
 }

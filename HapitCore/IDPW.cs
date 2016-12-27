@@ -8,10 +8,13 @@ using MongoDB.Driver;
 
 namespace HapitCore
 {
-    class IDPW
+    class ObjectDB
     {
-            public ObjectId _id { get; set; }
-            public string ID { get; set; }
-            public string PW { get; set; }
+        public Object _id { get; set; }
+        public string ID { get; set; }
+        public string Password { get; set; }
+        public string Name { get; set; }
+        public int Number { get; set; }
+
     }
 }
