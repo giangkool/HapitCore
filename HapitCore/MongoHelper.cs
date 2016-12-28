@@ -17,12 +17,18 @@ namespace HapitCore
             MongoClient _client = new MongoClient("mongodb://localhost:27017");
             MongoServer _server = _client.GetServer();
             this.database = _server.GetDatabase("user");
+<<<<<<< HEAD
             MongoCollection _colection = database.GetCollection<ObjectDB>("Infor");
+=======
+
+            MongoCollection collection = database.GetCollection("IDPW");
+>>>>>>> origin/master
         }
         public MongoCollection collection
         {
             get
             {
+<<<<<<< HEAD
                 return database.GetCollection<ObjectDB>("Infor");
             }
         }
@@ -45,6 +51,22 @@ namespace HapitCore
 
             }
 
+=======
+                return database.GetCollection("IDPW");
+            }
+        }
+        ///t sử dụng mảng để insert vào 
+        public void swdata(string[] info,List<string> usr)
+        {
+            BsonDocument user = new BsonDocument();
+            int i = 0;
+            foreach (string str in usr) {
+                i++;
+                user.Add(info[i], str);
+            }            
+            collection.Insert(user);
+            
+>>>>>>> origin/master
         }
         public void update(string kid, string ID, string PW, string Name, int Number)
         {
