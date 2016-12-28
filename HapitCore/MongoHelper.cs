@@ -19,21 +19,26 @@ namespace HapitCore
             MongoServer _server = client.GetServer();
             this.database = _server.GetDatabase("user");
 
-            MongoCollection collection = database.GetCollection<IDPW>("IDPW");
+            MongoCollection collection = database.GetCollection("IDPW");
         }
         public MongoCollection collection
         {
             get
             {
-                return database.GetCollection<IDPW>("IDPW");
+                return database.GetCollection("IDPW");
             }
         }
-        public void swdata(string ID,string PW)
+        ///t sử dụng mảng để insert vào 
+        public void swdata(string[] info,List<string> usr)
         {
-            IDPW sv = new IDPW();
-            sv.ID = ID;
-            sv.PW = PW;
-            collection.Save(sv).ToBsonDocument();
+            BsonDocument user = new BsonDocument();
+            int i = 0;
+            foreach (string str in usr) {
+                i++;
+                user.Add(info[i], str);
+            }            
+            collection.Insert(user);
+            
         }
         public void updata(string ID,string IDupdate,string PW,string PWupdate)
         {
